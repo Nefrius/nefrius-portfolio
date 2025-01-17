@@ -1,146 +1,242 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useState, FormEvent } from 'react';
-import emailjs from '@emailjs/browser';
-import { BsGithub, BsLinkedin, BsEnvelope } from 'react-icons/bs';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Suspense, useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { FaGithub, FaLinkedin, FaYoutube, FaEnvelope, FaMapMarkerAlt, FaPhone } from 'react-icons/fa';
+
+const Background = dynamic(() => import('@/components/three/Background'), {
+  ssr: false,
+  loading: () => <div className="fixed inset-0 bg-dark" />
+});
 
 const socialLinks = [
   {
     name: 'GitHub',
-    url: 'https://github.com/nefrius',
-    icon: BsGithub,
+    url: 'https://github.com/Nefrius',
+    icon: FaGithub,
+    description: 'Açık kaynak projelerim ve katkılarım'
   },
   {
     name: 'LinkedIn',
-    url: 'https://linkedin.com/in/nefrius',
-    icon: BsLinkedin,
+    url: 'https://www.linkedin.com/in/enes-ba%C5%9F-8430b81b1',
+    icon: FaLinkedin,
+    description: 'Profesyonel profilim ve iş deneyimlerim'
   },
   {
-    name: 'Email',
-    url: 'mailto:your.email@example.com',
-    icon: BsEnvelope,
+    name: 'YouTube',
+    url: 'https://www.youtube.com/@bilgesteknoloji',
+    icon: FaYoutube,
+    description: 'Eğitim videoları ve teknoloji içerikleri'
+  }
+];
+
+const contactInfo = [
+  {
+    icon: FaEnvelope,
+    label: 'E-posta',
+    value: 'enesbas616161@gmail.com',
+    href: 'mailto:enesbas616161@gmail.com'
   },
+  {
+    icon: FaMapMarkerAlt,
+    label: 'Konum',
+    value: 'İstanbul, Türkiye'
+  },
+  {
+    icon: FaPhone,
+    label: 'Telefon',
+    value: '+90 (***) ***-****',
+    href: 'tel:+905555555555'
+  }
 ];
 
 export default function ContactPage() {
-  const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState('');
+  const { scrollY } = useScroll();
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const [isClient, setIsClient] = useState(false);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setSending(true);
-    setError('');
-
-    const form = e.currentTarget;
-    
-    try {
-      await emailjs.sendForm(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-        form,
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-      );
-      setSent(true);
-      form.reset();
-    } catch {
-      setError('Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
-    } finally {
-      setSending(false);
-    }
-  }
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
-    <main className="min-h-screen pt-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+    <main className="min-h-screen relative">
+      <div className="fixed inset-0 -z-10">
+        <Suspense fallback={<div className="fixed inset-0 bg-dark" />}>
+          <Background />
+        </Suspense>
+      </div>
+
+      {/* Landing Screen */}
+      {isClient && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="space-y-8"
+          style={{ opacity }}
+          className="fixed inset-0 z-20 flex items-center justify-center bg-black/50 backdrop-blur-md"
         >
-          <h1 className="text-4xl font-bold">İletişim</h1>
-
-          <div className="flex space-x-6">
-            {socialLinks.map((link) => (
-              <motion.a
-                key={link.name}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <link.icon className="w-6 h-6" />
-                <span className="sr-only">{link.name}</span>
-              </motion.a>
-            ))}
-          </div>
-
-          <div className="bg-white/5 rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4">Mesaj Gönder</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-1">
-                  Adınız
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  required
-                  className="w-full px-4 py-2 bg-black/50 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/20"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-1">
-                  E-posta Adresiniz
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  required
-                  className="w-full px-4 py-2 bg-black/50 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/20"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium mb-1">
-                  Mesajınız
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  required
-                  rows={4}
-                  className="w-full px-4 py-2 bg-black/50 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/20"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={sending}
-                className="w-full px-4 py-2 bg-white text-black font-medium rounded-lg hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {sending ? 'Gönderiliyor...' : 'Gönder'}
-              </button>
-
-              {error && (
-                <p className="text-red-500 text-sm mt-2">{error}</p>
-              )}
-
-              {sent && (
-                <p className="text-green-500 text-sm mt-2">
-                  Mesajınız başarıyla gönderildi!
-                </p>
-              )}
-            </form>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-center px-4 relative z-10"
+          >
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6">
+              İletişim
+            </h1>
+            <p className="text-xl sm:text-2xl text-gray-400 mb-8 max-w-2xl mx-auto">
+              Benimle iletişime geçin ve projelerinizi hayata geçirelim
+            </p>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              className="animate-bounce text-gray-500"
+            >
+              ↓ Aşağı kaydır
+            </motion.div>
+          </motion.div>
         </motion.div>
+      )}
+
+      <div className="relative z-10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-32">
+          {/* Contact Section */}
+          <section className="min-h-screen pt-[100vh]">
+            <div className="grid grid-cols-1 gap-8">
+              {/* Contact Info */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true, margin: "-100px" }}
+                className="bg-black/30 backdrop-blur-sm rounded-xl p-6 border border-white/10"
+              >
+                <h2 className="text-2xl font-bold mb-6">İletişim Bilgileri</h2>
+                <div className="grid gap-6">
+                  {contactInfo.map((info, index) => (
+                    <div key={index} className="flex items-center space-x-4">
+                      <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center">
+                        <info.icon className="w-6 h-6 text-gray-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">{info.label}</p>
+                        {info.href ? (
+                          <a 
+                            href={info.href}
+                            className="text-lg text-white hover:text-gray-300 transition-colors"
+                          >
+                            {info.value}
+                          </a>
+                        ) : (
+                          <p className="text-lg text-white">{info.value}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Social Links */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true, margin: "-100px" }}
+                className="bg-black/30 backdrop-blur-sm rounded-xl p-6 border border-white/10"
+              >
+                <h2 className="text-2xl font-bold mb-6">Sosyal Medya</h2>
+                <div className="grid gap-6">
+                  {socialLinks.map((link, index) => (
+                    <motion.a
+                      key={index}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                        <link.icon className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
+                      </div>
+                      <div className="ml-4">
+                        <h3 className="text-lg font-medium text-white">{link.name}</h3>
+                        <p className="text-sm text-gray-400">{link.description}</p>
+                      </div>
+                    </motion.a>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Contact Form */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true, margin: "-100px" }}
+                className="bg-black/30 backdrop-blur-sm rounded-xl p-6 border border-white/10"
+              >
+                <h2 className="text-2xl font-bold mb-6">İletişim Formu</h2>
+                <form className="space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">
+                        İsim
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent transition-colors"
+                        placeholder="İsminizi girin"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">
+                        E-posta
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent transition-colors"
+                        placeholder="E-posta adresinizi girin"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="subject" className="block text-sm font-medium text-gray-400 mb-2">
+                      Konu
+                    </label>
+                    <input
+                      type="text"
+                      id="subject"
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent transition-colors"
+                      placeholder="Mesajınızın konusunu girin"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-400 mb-2">
+                      Mesaj
+                    </label>
+                    <textarea
+                      id="message"
+                      rows={6}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent transition-colors resize-none"
+                      placeholder="Mesajınızı girin"
+                    />
+                  </div>
+                  <motion.button
+                    type="submit"
+                    className="w-full bg-white/10 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-white/20"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Gönder
+                  </motion.button>
+                </form>
+              </motion.div>
+            </div>
+          </section>
+        </div>
       </div>
     </main>
   );

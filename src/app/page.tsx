@@ -1,157 +1,225 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
-import ScrollAnimation from '@/components/ui/ScrollAnimation';
-import HoverCard from '@/components/ui/HoverCard';
-import { FiCode, FiMonitor, FiSmartphone } from 'react-icons/fi';
+import { Suspense, useEffect, useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { FaServer, FaCode, FaMobile, FaDatabase, FaRocket, FaUsers, FaClock, FaSmile, FaCloud } from 'react-icons/fa';
+import { SiTypescript, SiReact, SiNodedotjs, SiMongodb, SiPostgresql, SiDocker } from 'react-icons/si';
 
 const Background = dynamic(() => import('@/components/three/Background'), {
   ssr: false,
-  loading: () => <div className="fixed inset-0 bg-dark" />,
+  loading: () => <div className="fixed inset-0 bg-dark" />
 });
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
-};
-
-const features = [
+const services = [
   {
     title: 'Full Stack Geliştirme',
-    description: 'Modern web teknolojileri ile uçtan uca çözümler',
-    icon: FiCode,
+    description: 'Modern web teknolojileri ile uçtan uca çözümler geliştiriyorum. Frontend\'den backend\'e, veritabanından sunucu yönetimine kadar komple çözümler.',
+    icon: FaCode,
+    technologies: [
+      { name: 'TypeScript', icon: SiTypescript },
+      { name: 'React', icon: SiReact },
+      { name: 'Node.js', icon: SiNodedotjs },
+      { name: 'MongoDB', icon: SiMongodb },
+      { name: 'PostgreSQL', icon: SiPostgresql }
+    ]
   },
   {
     title: 'Web Uygulamaları',
-    description: 'Performanslı ve ölçeklenebilir web uygulamaları',
-    icon: FiMonitor,
+    description: 'Yüksek performanslı, ölçeklenebilir ve güvenli web uygulamaları. Mikroservis mimarisi, konteynerizasyon ve bulut altyapısı ile modern çözümler.',
+    icon: FaServer,
+    technologies: [
+      { name: 'Docker', icon: SiDocker },
+      { name: 'Cloud', icon: FaCloud }
+    ]
   },
   {
     title: 'Responsive Tasarım',
-    description: 'Tüm cihazlarda mükemmel görünen tasarımlar',
-    icon: FiSmartphone,
+    description: 'Mobil öncelikli yaklaşım ile her ekran boyutunda mükemmel görünen, kullanıcı dostu ve modern arayüzler. PWA desteği ile mobil uygulama deneyimi.',
+    icon: FaMobile,
+    features: ['Mobile First', 'PWA', 'Cross Platform']
   },
+  {
+    title: 'Veritabanı & API',
+    description: 'Optimize edilmiş veritabanı tasarımı ve güvenli API endpoints. GraphQL ve REST API çözümleri ile esnek ve hızlı veri erişimi.',
+    icon: FaDatabase,
+    features: ['GraphQL', 'REST API', 'Optimizasyon']
+  }
+];
+
+const stats = [
+  {
+    number: '50+',
+    label: 'Proje',
+    description: 'Başarıyla tamamlanmış kurumsal ve bireysel projeler',
+    icon: FaRocket,
+    color: 'from-blue-500 to-cyan-500'
+  },
+  {
+    number: '5+',
+    label: 'Yıl Deneyim',
+    description: 'Full stack web geliştirme ve yazılım mimarisi',
+    icon: FaUsers,
+    color: 'from-green-500 to-emerald-500'
+  },
+  {
+    number: '100%',
+    label: 'Müşteri Memnuniyeti',
+    description: 'Mutlu müşteriler ve başarılı iş birlikleri',
+    icon: FaSmile,
+    color: 'from-purple-500 to-pink-500'
+  },
+  {
+    number: '24/7',
+    label: 'Destek',
+    description: 'Kesintisiz teknik destek ve bakım hizmeti',
+    icon: FaClock,
+    color: 'from-orange-500 to-red-500'
+  }
 ];
 
 export default function Home() {
+  const { scrollY } = useScroll();
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
-    <>
+    <main className="min-h-screen relative">
       <div className="fixed inset-0 -z-10">
         <Suspense fallback={<div className="fixed inset-0 bg-dark" />}>
           <Background />
         </Suspense>
       </div>
-      
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="min-h-screen flex items-center justify-center px-4"
-      >
-        <div className="max-w-3xl text-center space-y-8">
-          <motion.h1 
-            variants={item}
-            className="text-4xl sm:text-5xl md:text-6xl font-bold"
+
+      {/* Landing Screen */}
+      {isClient && (
+        <motion.div
+          style={{ opacity }}
+          className="fixed inset-0 z-20 flex items-center justify-center bg-black/50 backdrop-blur-md"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-center px-4 relative z-10"
           >
-            Merhaba, Ben <span className="text-light">İsminiz</span>
-          </motion.h1>
-          
-          <motion.p 
-            variants={item}
-            className="text-xl sm:text-2xl text-light-muted"
-          >
-            Full Stack Geliştirici & UI/UX Tasarımcı
-          </motion.p>
-          
-          <motion.div 
-            variants={item}
-            className="flex justify-center gap-4"
-          >
-            <motion.a
-              href="/projects"
-              className="px-6 py-3 bg-light text-dark rounded-lg hover:bg-light/90 transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6">
+              Enes Baş
+            </h1>
+            <p className="text-xl sm:text-2xl text-gray-400 mb-8 max-w-2xl mx-auto">
+              Full Stack Developer & AI Enthusiast
+            </p>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              className="animate-bounce text-gray-500"
             >
-              Projelerimi Gör
-            </motion.a>
-            <motion.a
-              href="/contact"
-              className="px-6 py-3 bg-dark-lighter text-light rounded-lg hover:bg-dark-accent transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              İletişime Geç
-            </motion.a>
+              ↓ Aşağı kaydır
+            </motion.div>
           </motion.div>
-        </div>
-      </motion.div>
+        </motion.div>
+      )}
 
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <ScrollAnimation>
-            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
-              Neler Yapıyorum?
-            </h2>
-          </ScrollAnimation>
+      <div className="relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-32">
+          {/* Services Section */}
+          <section className="min-h-screen pt-[100vh]">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, margin: "-100px" }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">Neler Yapıyorum?</h2>
+              <p className="text-xl text-gray-400">Modern teknolojiler ile yaratıcı çözümler</p>
+            </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <ScrollAnimation key={feature.title} delay={index * 0.2}>
-                <HoverCard>
-                  <div className="bg-dark-lighter backdrop-blur-sm p-6 h-full">
-                    <feature.icon className="w-8 h-8 mb-4 text-light" />
-                    <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                    <p className="text-light-muted">{feature.description}</p>
-                  </div>
-                </HoverCard>
-              </ScrollAnimation>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 px-4 bg-dark-accent">
-        <div className="max-w-6xl mx-auto">
-          <ScrollAnimation>
-            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
-              İstatistikler
-            </h2>
-          </ScrollAnimation>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { number: '50+', label: 'Proje' },
-              { number: '5+', label: 'Yıl Deneyim' },
-              { number: '100%', label: 'Müşteri Memnuniyeti' },
-              { number: '24/7', label: 'Destek' },
-            ].map((stat, index) => (
-              <ScrollAnimation key={stat.label} delay={index * 0.1}>
-                <HoverCard glowColor="rgba(255, 255, 255, 0.1)">
-                  <div className="text-center p-6 bg-dark-lighter backdrop-blur-sm">
-                    <div className="text-3xl sm:text-4xl font-bold text-light mb-2">
-                      {stat.number}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {services.map((service, index) => (
+                <motion.div
+                  key={service.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  className="bg-black/30 backdrop-blur-sm rounded-xl p-6 hover:bg-white/5 transition-colors border border-white/10"
+                >
+                  <service.icon className="w-12 h-12 text-gray-300 mb-4" />
+                  <h3 className="text-xl font-semibold mb-3">{service.title}</h3>
+                  <p className="text-gray-400 mb-4">{service.description}</p>
+                  
+                  {service.technologies && (
+                    <div className="flex flex-wrap gap-3">
+                      {service.technologies.map((tech) => (
+                        <div key={tech.name} className="flex items-center gap-1 text-gray-400">
+                          <tech.icon className="w-5 h-5" />
+                          <span className="text-sm">{tech.name}</span>
+                        </div>
+                      ))}
                     </div>
-                    <div className="text-light-muted">{stat.label}</div>
+                  )}
+                  
+                  {service.features && (
+                    <div className="flex flex-wrap gap-2">
+                      {service.features.map((feature) => (
+                        <span
+                          key={feature}
+                          className="px-3 py-1 bg-white/5 rounded-full text-sm text-gray-400"
+                        >
+                          {feature}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </section>
+
+          {/* Stats Section */}
+          <section>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, margin: "-100px" }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">İstatistikler</h2>
+              <p className="text-xl text-gray-400">Sayılarla başarı hikayem</p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  className="relative group"
+                >
+                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+                  <div className="relative bg-black/30 backdrop-blur-sm rounded-xl p-6 text-center border border-white/10">
+                    <div className="inline-flex p-3 rounded-lg bg-white/10 mb-4">
+                      <stat.icon className="w-6 h-6 text-gray-300" />
+                    </div>
+                    <div className="text-3xl font-bold mb-2">{stat.number}</div>
+                    <div className="text-lg font-medium mb-2">{stat.label}</div>
+                    <p className="text-gray-400 text-sm">{stat.description}</p>
                   </div>
-                </HoverCard>
-              </ScrollAnimation>
-            ))}
-          </div>
+                </motion.div>
+              ))}
+            </div>
+          </section>
         </div>
-      </section>
-    </>
+      </div>
+    </main>
   );
 }

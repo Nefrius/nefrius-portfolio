@@ -13,6 +13,37 @@ const navItems = [
   { name: 'İletişim', href: '/contact' },
 ];
 
+const menuVariants = {
+  closed: {
+    opacity: 0,
+    y: "-100%",
+    transition: {
+      duration: 0.3,
+      when: "afterChildren",
+    }
+  },
+  open: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+      when: "beforeChildren",
+      staggerChildren: 0.1,
+    }
+  }
+};
+
+const itemVariants = {
+  closed: {
+    opacity: 0,
+    y: -20,
+  },
+  open: {
+    opacity: 1,
+    y: 0,
+  }
+};
+
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
@@ -25,7 +56,7 @@ export default function MobileMenu() {
     <div className="lg:hidden">
       <button
         onClick={toggleMenu}
-        className="p-2 text-white hover:text-gray-300 transition-colors"
+        className="p-2 text-light hover:text-light-muted transition-colors"
         aria-label={isOpen ? 'Menüyü Kapat' : 'Menüyü Aç'}
       >
         {isOpen ? <HiX className="w-6 h-6" /> : <HiMenu className="w-6 h-6" />}
@@ -38,42 +69,33 @@ export default function MobileMenu() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.5 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black"
+              className="fixed inset-0 bg-dark"
               onClick={toggleMenu}
             />
             <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed right-0 top-0 h-full w-64 bg-gray-900 shadow-lg p-6"
+              variants={menuVariants}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              className="fixed top-16 left-0 right-0 bg-dark-lighter backdrop-blur-lg border-b border-white/10 shadow-lg"
             >
-              <div className="flex justify-end">
-                <button
-                  onClick={toggleMenu}
-                  className="p-2 text-white hover:text-gray-300 transition-colors"
-                  aria-label="Menüyü Kapat"
-                >
-                  <HiX className="w-6 h-6" />
-                </button>
-              </div>
-              <nav className="mt-8">
-                <ul className="space-y-4">
+              <nav className="max-w-7xl mx-auto px-4 py-6">
+                <ul className="space-y-1">
                   {navItems.map((item) => {
                     const isActive = pathname === item.href;
                     return (
                       <motion.li
                         key={item.href}
-                        whileHover={{ x: 4 }}
-                        whileTap={{ scale: 0.98 }}
+                        variants={itemVariants}
+                        className="overflow-hidden"
                       >
                         <Link
                           href={item.href}
                           onClick={toggleMenu}
-                          className={`block py-2 text-lg ${
+                          className={`block py-3 px-4 rounded-lg text-lg transition-colors ${
                             isActive
-                              ? 'text-white font-medium'
-                              : 'text-gray-400 hover:text-white'
+                              ? 'bg-dark-accent text-light font-medium'
+                              : 'text-light-muted hover:bg-dark-accent/50 hover:text-light'
                           }`}
                         >
                           {item.name}
