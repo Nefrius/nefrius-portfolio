@@ -3,7 +3,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Suspense, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { FaGraduationCap, FaBriefcase, FaCode, FaServer, FaMobileAlt, FaDatabase, FaRobot } from 'react-icons/fa';
+import { FaGraduationCap, FaBriefcase, FaCode, FaServer, FaMobileAlt, FaDatabase, FaRobot, FaLaptopCode } from 'react-icons/fa';
 
 const Background = dynamic(() => import('@/components/three/Background'), {
   ssr: false,
@@ -12,34 +12,33 @@ const Background = dynamic(() => import('@/components/three/Background'), {
 
 const experiences = [
   {
-    title: "Senior Full Stack Developer",
-    company: "Bilges Teknoloji",
-    period: "2021 - Şimdi",
-    description: "Modern web uygulamaları geliştirme, mikroservis mimarisi, cloud native çözümler ve DevOps pratikleri.",
-    technologies: ["Next.js", "Node.js", "Docker", "AWS", "PostgreSQL"]
-  },
-  {
-    title: "Full Stack Developer",
+    title: "Yazılım Geliştirme",
     company: "Freelancer",
-    period: "2019 - 2021",
-    description: "E-ticaret platformları, B2B uygulamalar ve özel yazılım çözümleri geliştirme.",
-    technologies: ["React", "Express.js", "MongoDB", "Firebase"]
+    period: "2022 - Şimdi",
+    description: "Web uygulamaları geliştirme, modern teknolojiler ve yapay zeka entegrasyonları.",
+    technologies: ["Next.js", "React", "TypeScript", "AI"]
   },
   {
-    title: "Frontend Developer",
-    company: "Startup Projects",
-    period: "2018 - 2019",
-    description: "Responsive ve kullanıcı dostu arayüzler, single page applications geliştirme.",
-    technologies: ["React", "TypeScript", "SASS"]
+    title: "Web Geliştirme",
+    company: "Kişisel Projeler",
+    period: "2021 - 2022",
+    description: "Frontend geliştirme, responsive tasarım ve kullanıcı deneyimi.",
+    technologies: ["HTML", "CSS", "JavaScript", "React"]
   }
 ];
 
 const education = [
   {
-    degree: "Bilgisayar Mühendisliği",
-    school: "İstanbul Teknik Üniversitesi",
-    period: "2014 - 2018",
-    description: "Algoritma, veri yapıları, yazılım mühendisliği ve yapay zeka üzerine kapsamlı eğitim."
+    degree: "Lise Eğitimi",
+    school: "Mustafa Barut Anadolu Lisesi",
+    period: "2023 - 2027",
+    description: "Sayısal bölümü öğrencisi."
+  },
+  {
+    degree: "Ortaokul Eğitimi",
+    school: "TOKİ Avrupa Konutları Ortaokulu",
+    period: "2019 - 2023",
+    description: "Başarıyla tamamlanan ortaokul eğitimi."
   }
 ];
 
@@ -130,16 +129,61 @@ export default function AboutPage() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-center px-4 relative z-10"
           >
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6">
-              Hakkımda
-            </h1>
-            <p className="text-xl sm:text-2xl text-gray-400 mb-8 max-w-2xl mx-auto">
-              Yazılım geliştirme tutkum ve deneyimlerim
-            </p>
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="mb-8"
+            >
+              <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6">
+                Hakkımda
+              </h1>
+              <p className="text-xl sm:text-2xl text-gray-400 mb-4">
+                Yazılım geliştirme tutkum ve deneyimlerim
+              </p>
+              <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">
+                Modern teknolojiler ile yenilikçi çözümler üretmek için sürekli kendimi geliştiriyorum
+              </p>
+            </motion.div>
+
+            {/* Quick Info */}
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8"
+            >
+              {[
+                { icon: FaCode, label: 'Full Stack', desc: 'Geliştirici' },
+                { icon: FaGraduationCap, label: 'Sürekli', desc: 'Öğrenme' },
+                { icon: FaBriefcase, label: '5+ Yıl', desc: 'Deneyim' },
+                { icon: FaLaptopCode, label: 'Modern', desc: 'Teknolojiler' }
+              ].map((item, index) => (
+                <div key={index} className="text-center">
+                  <motion.div
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.7 + index * 0.1 }}
+                    className="inline-flex p-2 rounded-lg bg-white/5 mb-2"
+                  >
+                    <item.icon className="w-5 h-5 text-gray-400" />
+                  </motion.div>
+                  <motion.div
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.8 + index * 0.1 }}
+                  >
+                    <div className="text-lg font-bold">{item.label}</div>
+                    <div className="text-sm text-gray-500">{item.desc}</div>
+                  </motion.div>
+                </div>
+              ))}
+            </motion.div>
+
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
+              transition={{ duration: 0.5, delay: 1.2 }}
               className="animate-bounce text-gray-500"
             >
               ↓ Aşağı kaydır

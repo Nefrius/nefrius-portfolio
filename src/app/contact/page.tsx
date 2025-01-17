@@ -1,14 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Suspense, useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-import { FaGithub, FaLinkedin, FaYoutube, FaEnvelope, FaMapMarkerAlt, FaPhone } from 'react-icons/fa';
-
-const Background = dynamic(() => import('@/components/three/Background'), {
-  ssr: false,
-  loading: () => <div className="fixed inset-0 bg-dark" />
-});
+import { FaEnvelope, FaMapMarkerAlt, FaPhone, FaGithub, FaLinkedin, FaYoutube } from 'react-icons/fa';
 
 const socialLinks = [
   {
@@ -62,13 +56,6 @@ export default function ContactPage() {
 
   return (
     <main className="min-h-screen relative">
-      <div className="fixed inset-0 -z-10">
-        <Suspense fallback={<div className="fixed inset-0 bg-dark" />}>
-          <Background />
-        </Suspense>
-      </div>
-
-      {/* Landing Screen */}
       {isClient && (
         <motion.div
           style={{ opacity }}
@@ -80,16 +67,61 @@ export default function ContactPage() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-center px-4 relative z-10"
           >
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6">
-              İletişim
-            </h1>
-            <p className="text-xl sm:text-2xl text-gray-400 mb-8 max-w-2xl mx-auto">
-              Benimle iletişime geçin ve projelerinizi hayata geçirelim
-            </p>
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="mb-8"
+            >
+              <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6">
+                İletişim
+              </h1>
+              <p className="text-xl sm:text-2xl text-gray-400 mb-4">
+                Benimle iletişime geçin
+              </p>
+              <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">
+                Projeleriniz için bilgi almak veya iş birliği yapmak için aşağıdaki iletişim kanallarını kullanabilirsiniz
+              </p>
+            </motion.div>
+
+            {/* Quick Info */}
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8"
+            >
+              {[
+                { icon: FaEnvelope, label: 'E-posta', desc: 'İletişim' },
+                { icon: FaMapMarkerAlt, label: 'Konum', desc: 'Türkiye' },
+                { icon: FaPhone, label: 'Telefon', desc: 'Destek' },
+                { icon: FaGithub, label: 'GitHub', desc: 'Profil' }
+              ].map((item, index) => (
+                <div key={index} className="text-center">
+                  <motion.div
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.7 + index * 0.1 }}
+                    className="inline-flex p-2 rounded-lg bg-white/5 mb-2"
+                  >
+                    <item.icon className="w-5 h-5 text-gray-400" />
+                  </motion.div>
+                  <motion.div
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.8 + index * 0.1 }}
+                  >
+                    <div className="text-lg font-bold">{item.label}</div>
+                    <div className="text-sm text-gray-500">{item.desc}</div>
+                  </motion.div>
+                </div>
+              ))}
+            </motion.div>
+
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
+              transition={{ duration: 0.5, delay: 1.2 }}
               className="animate-bounce text-gray-500"
             >
               ↓ Aşağı kaydır

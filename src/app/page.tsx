@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import { Suspense, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { FaServer, FaCode, FaMobile, FaDatabase, FaRocket, FaUsers, FaClock, FaSmile, FaCloud } from 'react-icons/fa';
+import { FaServer, FaCode, FaMobile, FaDatabase, FaRocket, FaUsers, FaClock, FaSmile, FaCloud, FaGithub, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import { SiTypescript, SiReact, SiNodedotjs, SiMongodb, SiPostgresql, SiDocker } from 'react-icons/si';
 
 const Background = dynamic(() => import('@/components/three/Background'), {
@@ -78,6 +78,27 @@ const stats = [
   }
 ];
 
+const socialLinks = [
+  {
+    name: 'GitHub',
+    url: 'https://github.com/Nefrius',
+    icon: FaGithub,
+    description: 'Açık kaynak projelerim'
+  },
+  {
+    name: 'LinkedIn',
+    url: 'https://www.linkedin.com/in/enes-ba%C5%9F-8430b81b1',
+    icon: FaLinkedin,
+    description: 'Profesyonel profilim'
+  },
+  {
+    name: 'YouTube',
+    url: 'https://www.youtube.com/@bilgesteknoloji',
+    icon: FaYoutube,
+    description: 'Eğitim içeriklerim'
+  }
+];
+
 export default function Home() {
   const { scrollY } = useScroll();
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
@@ -107,16 +128,78 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-center px-4 relative z-10"
           >
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6">
-              Enes Baş
-            </h1>
-            <p className="text-xl sm:text-2xl text-gray-400 mb-8 max-w-2xl mx-auto">
-              Full Stack Developer & AI Enthusiast
-            </p>
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="mb-8"
+            >
+              <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6">
+                Enes Baş
+              </h1>
+              <p className="text-xl sm:text-2xl text-gray-400 mb-4">
+                Full Stack Developer & AI Enthusiast
+              </p>
+              <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">
+                Modern web teknolojileri ve yapay zeka ile yenilikçi çözümler geliştiriyorum
+              </p>
+            </motion.div>
+
+            {/* Quick Stats */}
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8"
+            >
+              {stats.map((stat, index) => (
+                <div key={index} className="text-center">
+                  <motion.div
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.7 + index * 0.1 }}
+                    className="inline-flex p-2 rounded-lg bg-white/5 mb-2"
+                  >
+                    <stat.icon className="w-5 h-5 text-gray-400" />
+                  </motion.div>
+                  <motion.div
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.8 + index * 0.1 }}
+                  >
+                    <div className="text-2xl font-bold">{stat.number}</div>
+                    <div className="text-sm text-gray-500">{stat.label}</div>
+                  </motion.div>
+                </div>
+              ))}
+            </motion.div>
+
+            {/* Social Links */}
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 1, duration: 0.5 }}
+              className="flex justify-center space-x-4 mb-12"
+            >
+              {socialLinks.map((link, index) => (
+                <motion.a
+                  key={index}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <link.icon className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
+                </motion.a>
+              ))}
+            </motion.div>
+
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
+              transition={{ duration: 0.5, delay: 1.2 }}
               className="animate-bounce text-gray-500"
             >
               ↓ Aşağı kaydır
